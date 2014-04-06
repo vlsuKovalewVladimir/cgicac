@@ -1,12 +1,23 @@
-*.class
+###################################
+### Файлы проекта IntelliJ IDEA ###
+###################################
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+.idea/*
+out/*
+*.iml
 
-# Package Files #
-*.jar
-*.war
-*.ear
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+###################################
+###        Файлы Eclipse        ###
+###################################
+
+.settings/*
+bin/*
+.classpath
+.project
+
+###################################
+###        Файлы other          ###
+###################################
+
+src/META-INF/*
