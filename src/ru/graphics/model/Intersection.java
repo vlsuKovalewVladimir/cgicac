@@ -1,5 +1,7 @@
 package ru.graphics.model;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 public class Intersection {
     private Intersection(){};
 
@@ -49,13 +51,62 @@ public class Intersection {
         xz1 =   z1 / x;
         xs  =    s / x;
 
-        double[][] result = new double[count+1][2];
+        double coneLeftX  = a2 + r2;
+        double coneRightX = a2 - r2;
+        double cylinderLeftX = a1 + r1;
+        double cylinderRightX = a1 - r1;
 
-        double minZ = min(c1,c2);
+        double leftX = min(coneLeftX, cylinderLeftX);
+        double rightX = max(coneRightX, cylinderRightX);
 
         double z0 = 0;
-        double dZ = minZ/count;
+        double maxZ = 0; //min(c1,c2);
+
+        if (cylinderLeftX >= coneRightX && a2 >= cylinderLeftX){
+            maxZ = equationByTwoPoints(leftX, a2, c2, coneRightX, 0); // r
+        }
+
+        if (coneLeftX >= cylinderRightX && cylinderRightX >= a2){
+            maxZ = equationByTwoPoints(rightX, a2, c2, coneLeftX, 0); // l
+        }
+
+        if (coneLeftX >= cylinderLeftX && cylinderLeftX >= a2){
+            maxZ = equationByTwoPoints(leftX, a2, c2, coneLeftX, 0); // l
+        }
+
+        if (a2 >= cylinderRightX && cylinderRightX >= coneRightX){
+            maxZ = equationByTwoPoints(rightX, a2, c2, coneRightX, 0); // r
+        }
+
+        if (coneLeftX >= cylinderLeftX && cylinderLeftX >= a2 &&
+                a2 > cylinderRightX && cylinderRightX > coneRightX){
+
+            z0 = equationByTwoPoints(rightX, a2, c2, coneRightX, 0); // r
+            maxZ = equationByTwoPoints(leftX, a2, c2, coneLeftX, 0); // l
+            maxZ -= z0;
+        }
+
+        if (a2 >= cylinderLeftX && a2 >= cylinderRightX &&
+                cylinderLeftX >= coneRightX && cylinderRightX >= coneRightX){
+            z0 = equationByTwoPoints(rightX, a2, c2, coneRightX, 0); // r
+            maxZ = equationByTwoPoints(leftX, a2, c2, coneRightX, 0); // r
+            maxZ -= z0;
+        }
+
+        if (coneLeftX >= cylinderLeftX && coneLeftX >= cylinderRightX &&
+                cylinderLeftX >= a2 && cylinderRightX >= a2){
+            z0 = equationByTwoPoints(leftX, a2, c2, coneLeftX, 0); // l
+            maxZ = equationByTwoPoints(rightX, a2, c2, coneLeftX, 0); // l
+            maxZ -= z0;
+        }
+
+        System.out.println(leftX+ "\t" + rightX);
+        System.out.println(coneLeftX +" "+coneRightX+" "+cylinderLeftX+" "+cylinderRightX);
+
+        double dZ = maxZ/count;
         double z = z0;
+
+        double[][] result = new double[count+1][2];
 
         for (int i = 0; i < count+1; i++){
             double x1 = xz2*z*z + xz1*z + xs;
@@ -63,16 +114,6 @@ public class Intersection {
             result[i][1] = x1;
             z += dZ;
         }
-
-        /*double[][] result = new double[count+1][2];
-        double minC = min(c1,c2);
-        int i = 0;
-        for (double z = 0; z <= minC; z += minC/count){
-            double x1 = xz2*z*z + xz1*z + xs;
-            result[i][0] = z;
-            result[i][1] = x1;
-            i++;
-        }*/
 
         return result;
     }
@@ -83,6 +124,10 @@ public class Intersection {
 
     private static double max(double c1, double c2) {
         return  (c1 < c2) ? c2 : c1;
+    }
+
+    private static double equationByTwoPoints(double x, double x0, double y0, double x1, double y1){
+        return (x-x0)*(y1-y0)/(x1-x0)+y0;
     }
 
     private static String formulaToString(String str, String str1, double z2, double z1, double y, double s){
