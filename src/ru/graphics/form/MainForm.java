@@ -64,7 +64,7 @@ public class MainForm extends JFrame implements ChangeListener{
 
         // Панель_2
         double spinnerMin  = 1;
-        double spinnerMax  = 11;
+        double spinnerMax  = 100;
         double spinnerStep = 0.1;
 
         spConeX = new JSpinner();

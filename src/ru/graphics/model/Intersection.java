@@ -1,9 +1,7 @@
 package ru.graphics.model;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 public class Intersection {
-    private Intersection(){};
+    private Intersection(){}
 
     public static String getLineXY(Cone cone, Cylinder cylinder){
         double a1 = cylinder.getX();
@@ -99,9 +97,6 @@ public class Intersection {
             maxZ = equationByTwoPoints(rightX, a2, c2, coneLeftX, 0); // l
             maxZ -= z0;
         }
-
-        System.out.println(leftX+ "\t" + rightX);
-        System.out.println(coneLeftX +" "+coneRightX+" "+cylinderLeftX+" "+cylinderRightX);
 
         double dZ = maxZ/count;
         double z = z0;
